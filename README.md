@@ -50,7 +50,8 @@ Este é um sistema modular. Possíveis melhorias futuras incluem:
 [PENDENTE] Modo "Deep Space" (paleta de cores alternativa para ambientes de baixíssima luz).
 
 👤 Desenvolvedor
-Projeto mantido sob a filosofia de design de Alta Performance e Minimalismo Funcional.
+Projeto mantido sob a filosofia de design interativo e funcional.
+
 Status do Sistema: Operacional.
 
-Este README serve como guia de arquitetura
+Este README serve como guia de construção e possíveis futuras melhorias.
