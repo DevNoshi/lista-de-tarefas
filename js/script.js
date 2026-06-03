@@ -1,29 +1,77 @@
-const taskInput = document.getElementById('taskInput');
-const taskList = document.getElementById('taskList');
-const langSelector = document.getElementById('langSelector');
+// ==========================================
+// NEXUS TASK ENGINE // CORE_LOGIC_2026
+// ==========================================
 
-const strings = {
-    pt: { title: "// GERENCIADOR_DE_SISTEMA", placeholder: "> NOVA_TAREFA...", btn: "[EXECUTAR]" },
-    en: { title: "// SYSTEM_TASK_MANAGER", placeholder: "> NEW_TASK...", btn: "[EXECUTE]" }
+const state = { 
+    tasks: JSON.parse(localStorage.getItem('tasks') || '[]') 
 };
 
-// Adicionar tarefa
+function render() {
+    const list = document.getElementById('taskList');
+    const prog = document.getElementById('prog-bar');
+    const count = document.getElementById('count');
+    
+    // Atualizar métricas
+    const total = state.tasks.length;
+    const done = state.tasks.filter(t => t.done).length;
+    
+    if (prog) prog.style.width = total ? `${(done / total) * 100}%` : '0%';
+    if (count) count.textContent = total;
+
+    // Renderizar lista com os novos componentes fluidos
+    list.innerHTML = state.tasks.map((t, i) => `
+        <li class="task-item ${t.priority} ${t.done ? 'done' : ''}">
+            <div>
+                <strong>${t.text.toUpperCase()}</strong><br>
+                <small style="opacity:0.6">${t.date || 'SEM PRAZO'}</small>
+            </div>
+            
+            <div style="display:flex; gap:15px; align-items:center;">
+                <div class="toggle-btn ${t.done ? 'active' : ''}" onclick="toggle(${i})"></div>
+                
+                <button class="btn-del" onclick="del(${i})">×</button>
+            </div>
+        </li>
+    `).join('');
+    
+    // Persistência
+    localStorage.setItem('tasks', JSON.stringify(state.tasks));
+}
+
+// Ações do Sistema
+window.toggle = (i) => { 
+    state.tasks[i].done = !state.tasks[i].done; 
+    render(); 
+};
+
+window.del = (i) => { 
+    state.tasks.splice(i, 1); 
+    render(); 
+};
+
+// Evento Principal
 document.getElementById('addTaskBtn').addEventListener('click', () => {
-    if (!taskInput.value) return;
-    const li = document.createElement('li');
-    li.innerHTML = `<span>${taskInput.value}</span> <button onclick="this.parentElement.remove()">X</button>`;
-    li.onclick = () => li.classList.toggle('done');
-    taskList.appendChild(li);
-    taskInput.value = '';
+    const input = document.getElementById('taskInput');
+    const date = document.getElementById('taskDate').value;
+    const priority = document.getElementById('taskPriority').value;
+    
+    if (input.value.trim()) {
+        state.tasks.push({ 
+            text: input.value, 
+            date: date, 
+            priority: priority, 
+            done: false 
+        });
+        input.value = ''; // Limpa o input após o envio
+        render();
+    }
 });
 
-// Tradução dinâmica
-langSelector.addEventListener('change', (e) => {
-    const s = strings[e.target.value];
-    document.getElementById('title').textContent = s.title;
-    taskInput.placeholder = s.placeholder;
-    document.getElementById('addTaskBtn').textContent = s.btn;
-});
+// Relógio do Sistema
+setInterval(() => {
+    const clock = document.getElementById('clock');
+    if(clock) clock.textContent = new Date().toLocaleTimeString();
+}, 1000);
 
-// Dark mode global
-document.getElementById('toggleDarkMode').onclick = () => document.body.classList.toggle('light-theme');
+// Inicialização
+render();

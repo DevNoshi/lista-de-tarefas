@@ -2,29 +2,37 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>System Tasks // Secure Interface</title>
+    <title>Lista de Tarefas</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1 id="title">// Estou finalizando, guenta ai</h1>
-            <div class="controls">
-                <select id="langSelector">
-                    <option value="pt">PT-BR</option>
-                    <option value="en">EN-US</option>
-                </select>
-                <button id="toggleDarkMode">MODO_LUZ/TREVAS</button>
-            </div>
+    <div class="grain"></div>
+    <main class="viewport">
+        <header class="sys-header">
+            <h1>// Organize Sua Rotina</h1>
+            <div id="clock">00:00:00</div>
         </header>
 
-        <section class="task-input-area">
-            <input type="text" id="taskInput" placeholder="> NOVA_TAREFA...">
-            <button id="addTaskBtn">[EXECUTAR]</button>
+        <section class="cmd-center">
+            <input type="text" id="taskInput" placeholder="> NOME_DA_MISSÃO..." autofocus>
+            <div class="row">
+                <input type="datetime-local" id="taskDate">
+                <select id="taskPriority">
+                    <option value="low">Normal</option>
+                    <option value="medium">Média</option>
+                    <option value="high">Alta</option>
+                </select>
+                <button id="addTaskBtn">[Iniciar]</button>
+            </div>
         </section>
 
         <ul id="taskList"></ul>
-    </div>
+
+        <footer class="sys-footer">
+            <div class="progress-track"><div id="prog-bar"></div></div>
+            <p>SISTEMA: OPERACIONAL | TAREFAS: <span id="count">0</span></p>
+        </footer>
+    </main>
     <script src="js/script.js"></script>
 </body>
 </html>
