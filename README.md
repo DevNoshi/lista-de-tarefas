@@ -1,83 +1,56 @@
-📌 To-Do List Responsivo
+sistema de gerenciamento de tarefas de alta performance, desenhado com uma estética Cyber-Industrial voltada para desenvolvedores e entusiastas de interfaces futuristas. Projetado para rodar localmente com persistência de dados, o sistema oferece um controle centralizado, visual minimalista (Glassmorphism) e feedback de progresso em tempo real.
 
-Este é um projeto de lista de tarefas (To-Do List) desenvolvido para ajudar na organização do dia a dia. O objetivo é fornecer uma interface simples e intuitiva para adicionar, remover e marcar tarefas como concluídas.
+🚀 Visão Geral
+O objetivo deste projeto é elevar a produtividade através de uma interface de Dashboard de Monitoramento. O foco não é apenas listar tarefas, mas proporcionar uma experiência de "controle de sistema" onde o usuário gerencia suas missões com precisão técnica.
 
-🚀 Demonstração
+🛠 Tecnologias Utilizadas
+Front-end: HTML5, CSS3 (com foco em backdrop-filter e cubic-bezier para transições fluidas).
 
-🔗 Acesse o projeto online
+Lógica: JavaScript ES6+ com manipulação de DOM reativa.
 
-🛠️ Funcionalidades
+Persistência: localStorage (Armazenamento local para que seus dados sobrevivam ao fechar o navegador).
 
-✅ Adicionar novas tarefas
+Design: Estética Hyper-Minimalist Cyber (inspirada em interfaces de sistemas operacionais de 2026).
 
-✏️ Editar tarefas existentes
+📋 Funcionalidades Principais
+Painel Centralizado: Interface focada em produtividade, removendo distrações.
 
-❌ Remover tarefas
+Gestão de Prioridades: Categorização visual por cores (Low, Medium, High).
 
-📌 Marcar tarefas como concluídas
+Métrica em Tempo Real: Barra de progresso integrada que responde instantaneamente às mudanças de estado.
 
-📱 Design responsivo para desktop e dispositivos móveis
+Feedback de Sistema: Relógio local integrado e status de sincronização (Online).
 
-📂 Como usar : 
+Interatividade: Botões de ação fluidos com feedback de estado (Toggle/Delete).
 
+📂 Estrutura do Projeto
+Plaintext
+/
+├── css/
+│   └── style.css       # Engine visual (Glassmorphism & Animações)
+├── js/
+│   └── script.js       # Core Logic (Renderização e Estado)
+└── index.html          # Shell da Aplicação
+💻 Como Rodar
+Clone este repositório para sua máquina.
 
-Acesse o site.
+Certifique-se de que os arquivos estão organizados na estrutura de pastas acima.
 
-Digite uma nova tarefa no campo de entrada e pressione "Adicionar".
+Abra o arquivo index.html em qualquer navegador moderno.
 
-Clique na tarefa para marcá-la como concluída.
+O sistema irá carregar automaticamente o motor de tarefas.
 
-Use os botões disponíveis para editar ou excluir uma tarefa.
+🔧 Manutenção e Evolução
+Este é um sistema modular. Possíveis melhorias futuras incluem:
 
-📌 Tecnologias utilizadas
+[PENDENTE] Implementação do Nexus Droid Oracle: Assistente de sistema para sugestões automáticas e automação de tarefas.
 
-HTML5
+[PENDENTE] Exportação de dados para JSON/CSV.
 
-CSS3
+[PENDENTE] Modo "Deep Space" (paleta de cores alternativa para ambientes de baixíssima luz).
 
-JavaScript (Vanilla)
+👤 Desenvolvedor
+Projeto mantido sob a filosofia de design de Alta Performance e Minimalismo Funcional.
+Status do Sistema: Operacional.
 
-📜 Licença  MIT
-
-Este projeto é de código aberto e pode ser utilizado para estudos e aprimoramento de habilidades em desenvolvimento web.
-
-
-
----
-
-# 📘 README – Projeto Lista de Tarefas
-
-```markdown
-# ✅ Lista de Tarefas
-
-Este projeto é uma aplicação simples e eficiente para gerenciar suas tarefas diárias. Com ele, você pode adicionar, marcar como concluída e remover atividades de forma prática.  
-
----
-
-## 🚀 Tecnologias utilizadas
-- **HTML5** → Estrutura da página  
-- **CSS3** → Estilo e layout responsivo  
-- **JavaScript (Vanilla JS)** → Manipulação de DOM e lógica das tarefas  
-
----
-
-## ⚙️ Funcionalidades
-✅ Adicionar novas tarefas  
-✅ Marcar tarefas como concluídas  
-✅ Remover tarefas individualmente  
-✅ Layout limpo e responsivo  
-✅ Salvamento das tarefas no navegador (**localStorage**)  
-
----
-
-## 📂 Estrutura de pastas
-
-📁 lista-de-tarefas
-│── index.html # Página principal
-│── css/
-│ └── style.css # Estilo do projeto
-│── js/
-│ └── script.js # Funções da lista
-│── imgs/
-│ └── favicon.ico # Ícone do projeto
-└── README.md # Documentação
+Este README serve como guia de arquitetura
