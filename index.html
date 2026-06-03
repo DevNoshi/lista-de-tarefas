@@ -1,202 +1,30 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lista de Tarefas</title>
-  <link rel="icon" type="image/x-icon" href="/imgs/favicon-32x32.png">
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <title>System Tasks // Secure Interface</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Lista de Tarefas</h1>
-      <div class="top-actions">
-        <input type="text" id="searchTask" placeholder="Buscar tarefa...">
-        <button id="clearAllBtn">Limpar Tudo</button>
-        <button id="toggleDarkMode" title="Alternar modo escuro">🌙</button>
-      </div>
-    </header>
+    <div class="container">
+        <header>
+            <h1 id="title">// Estou finalizando, guenta ai</h1>
+            <div class="controls">
+                <select id="langSelector">
+                    <option value="pt">PT-BR</option>
+                    <option value="en">EN-US</option>
+                </select>
+                <button id="toggleDarkMode">MODO_LUZ/TREVAS</button>
+            </div>
+        </header>
 
-    <section class="input-section">
-      <div class="input-group">
-        <input type="text" id="taskInput" placeholder="Adicione uma nova tarefa...">
-        <input type="datetime-local" id="startTime">
-        <input type="number" id="duration" placeholder="Prazo (horas)" min="0">
-        <button id="addTaskBtn">Adicionar</button>
-      </div>
-    </section>
+        <section class="task-input-area">
+            <input type="text" id="taskInput" placeholder="> NOVA_TAREFA...">
+            <button id="addTaskBtn">[EXECUTAR]</button>
+        </section>
 
-    <section class="task-summary">
-      <span id="count-pendente" class="badge yellow">Pendentes: 0</span>
-      <span id="count-resolvido" class="badge green">Resolvidas: 0</span>
-      <span id="count-finalizado" class="badge gray">Finalizadas: 0</span>
-    </section>
-
-    <section class="task-section">
-      <ul id="taskList"></ul>
-      <p id="emptyState">Nenhuma tarefa adicionada ainda ✨</p>
-    </section>
-  </div>
-
-  <!-- Toast de feedback -->
-  <div id="toast"></div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const taskInput = document.getElementById("taskInput");
-      const startTime = document.getElementById("startTime");
-      const duration = document.getElementById("duration");
-      const addTaskBtn = document.getElementById("addTaskBtn");
-      const taskList = document.getElementById("taskList");
-      const clearAllBtn = document.getElementById("clearAllBtn");
-      const searchTask = document.getElementById("searchTask");
-      const toggleDarkMode = document.getElementById("toggleDarkMode");
-      const emptyState = document.getElementById("emptyState");
-
-      // Badges
-      const countPendente = document.getElementById("count-pendente");
-      const countResolvido = document.getElementById("count-resolvido");
-      const countFinalizado = document.getElementById("count-finalizado");
-
-      // Toast
-      const toast = document.getElementById("toast");
-      function showToast(msg, type = "success") {
-        toast.textContent = msg;
-        toast.className = "show " + type;
-        setTimeout(() => (toast.className = toast.className.replace("show", "")), 2500);
-      }
-
-      // Função para formatar data/hora
-      function formatarDataHoraBR(dataISO) {
-        if (!dataISO) return "Não definido";
-        const data = new Date(dataISO);
-        const dia = String(data.getDate()).padStart(2, "0");
-        const mes = String(data.getMonth() + 1).padStart(2, "0");
-        const ano = data.getFullYear();
-        const horas = String(data.getHours()).padStart(2, "0");
-        const minutos = String(data.getMinutes()).padStart(2, "0");
-        return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
-      }
-
-      // Atualizar contagem
-      function updateCount(tasks) {
-        const pendente = tasks.filter(t => t.status === "pendente").length;
-        const resolvido = tasks.filter(t => t.status === "resolvido").length;
-        const finalizado = tasks.filter(t => t.status === "finalizado").length;
-
-        countPendente.textContent = `Pendentes: ${pendente}`;
-        countResolvido.textContent = `Resolvidas: ${resolvido}`;
-        countFinalizado.textContent = `Finalizadas: ${finalizado}`;
-      }
-
-      // Carregar tarefas
-      function loadTasks(filter = "") {
-        const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-        taskList.innerHTML = "";
-
-        if (tasks.length === 0) {
-          emptyState.style.display = "block";
-        } else {
-          emptyState.style.display = "none";
-        }
-
-        tasks.forEach((task, index) => {
-          if (task.text.toLowerCase().includes(filter.toLowerCase())) {
-            const li = document.createElement("li");
-            li.classList.add("fade-in");
-            li.innerHTML = `
-              <div class="task-info">
-                <span>${task.text}</span>
-                <span class="status ${task.status}" data-index="${index}">${task.status}</span>
-              </div>
-              <div class="task-time">
-                Início: ${formatarDataHoraBR(task.startTime)} | Prazo: ${task.duration || "Não definido"} horas
-              </div>
-              <button class='delete-btn' data-index='${index}'>Remover</button>
-            `;
-            taskList.appendChild(li);
-          }
-        });
-
-        updateCount(tasks);
-      }
-
-      // Adicionar tarefa
-      function addTask() {
-        const taskText = taskInput.value.trim();
-        const start = startTime.value;
-        const taskDuration = duration.value;
-        if (taskText === "") return showToast("Digite uma tarefa!", "error");
-
-        const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-        tasks.push({ text: taskText, status: "pendente", startTime: start, duration: taskDuration });
-        localStorage.setItem("tasks", JSON.stringify(tasks));
-        taskInput.value = "";
-        startTime.value = "";
-        duration.value = "";
-        loadTasks();
-        showToast("Tarefa adicionada ✅");
-      }
-
-      // Remover tarefa
-      function removeTask(index) {
-        const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-        tasks.splice(index, 1);
-        localStorage.setItem("tasks", JSON.stringify(tasks));
-        loadTasks();
-        showToast("Tarefa removida 🗑️", "error");
-      }
-
-      // Alterar status
-      function changeStatus(index) {
-        const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-        if (tasks[index].status === "pendente") {
-          tasks[index].status = "resolvido";
-        } else if (tasks[index].status === "resolvido") {
-          tasks[index].status = "finalizado";
-        } else {
-          tasks[index].status = "pendente";
-        }
-        localStorage.setItem("tasks", JSON.stringify(tasks));
-        loadTasks();
-      }
-
-      // Limpar todas tarefas
-      function clearAll() {
-        localStorage.removeItem("tasks");
-        loadTasks();
-        showToast("Todas as tarefas foram apagadas 🗑️", "error");
-      }
-
-      // Dark Mode
-      function toggleDark() {
-        document.body.classList.toggle("dark");
-        const isDark = document.body.classList.contains("dark");
-        toggleDarkMode.textContent = isDark ? "☀️" : "🌙";
-        localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
-      }
-
-      // Eventos
-      addTaskBtn.addEventListener("click", addTask);
-      taskList.addEventListener("click", (event) => {
-        if (event.target.classList.contains("delete-btn")) {
-          removeTask(event.target.dataset.index);
-        } else if (event.target.classList.contains("status")) {
-          changeStatus(event.target.dataset.index);
-        }
-      });
-      clearAllBtn.addEventListener("click", clearAll);
-      searchTask.addEventListener("input", (e) => loadTasks(e.target.value));
-      toggleDarkMode.addEventListener("click", toggleDark);
-
-      // Estado inicial
-      loadTasks();
-      if (localStorage.getItem("darkMode") === "enabled") {
-        document.body.classList.add("dark");
-        toggleDarkMode.textContent = "☀️";
-      }
-    });
-  </script>
+        <ul id="taskList"></ul>
+    </div>
+    <script src="js/script.js"></script>
 </body>
 </html>
