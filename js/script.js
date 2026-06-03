@@ -76,32 +76,3 @@ setInterval(() => {
 // Inicialização
 render();
 
-// ==========================================
-// NEXUS DROID // LOGIC_ENGINE_2026
-// ==========================================
-
-function summonDroid() {
-    // Array de piadas e zoeiras imersivas
-    const jokes = [
-        "ATUALIZAR ARQUIVOS MESTRES? DEVE SER MEU LANCE!",
-        "CORRIGIR BUG DE SEGURANÇA? DEVE SER MEU LANCE!",
-        "SINCRONIZAR COM A REDE CENTRAL? DEVE SER MEU LANCE!",
-        "EXECUTAR BACKUP DE MEMÓRIA CRÍTICO? DEVE SER MEU LANCE!",
-        "COMPILAR NOVO NÚCLEO DO SISTEMA? DEVE SER MEU LANCE!",
-        "DÚVIDA? PERGUNTA AO ORÁCULO... DEVE SER MEU LANCE!"
-    ];
-
-    const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
-
-    const jokesList = [
-        { text: randomJoke, date: "*DROID_SUMMON", priority: "low", done: false }
-    ];
-
-    // Adiciona a "zoeira" como uma nova tarefa de baixa prioridade (cyan)
-    state.tasks.push(...jokesList);
-
-    // Renderiza novamente a lista de tarefas para incluir a nova piada
-    render();
-}
-
-document.getElementById('nexus-droid').addEventListener('click', summonDroid);
