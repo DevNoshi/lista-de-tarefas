@@ -1,41 +1,55 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Lista de Tarefas</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Tarefas</title>
+  <meta name="theme-color" content="#0d0e12">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    
-    <div class="grain"></div>
-    <main class="viewport">
-        <header class="sys-header">
-            <h1>// Organize Sua Rotina</h1>
-            <div id="clock">00:00:00</div>
-        </header>
+  <div class="glow" aria-hidden="true"></div>
 
-        <section class="cmd-center">
-            <input type="text" id="taskInput" placeholder="> Nova Tarefa..." autofocus>
-            <div class="row">
-                <input type="datetime-local" id="taskDate">
-                <select id="taskPriority">
-                    <option value="low">Prioridade I</option>
-                    <option value="medium">Prioridade II</option>
-                    <option value="high">Prioridade III</option>
-                </select>
-                <button id="addTaskBtn">[Iniciar]</button>
-            </div>
-        </section>
+  <main class="viewport">
+    <header class="sys-header">
+      <div>
+        <p class="date" id="today"></p>
+        <h1>Organize sua rotina</h1>
+      </div>
+      <div id="clock" aria-label="Hora atual">00:00:00</div>
+    </header>
 
-        <ul id="taskList"></ul>
+    <section class="cmd-center" aria-label="Nova tarefa">
+      <input type="text" id="taskInput" placeholder="O que você precisa fazer?" maxlength="120" autocomplete="off" autofocus>
+      <div class="row">
+        <input type="datetime-local" id="taskDate" aria-label="Data e hora">
+        <select id="taskPriority" aria-label="Prioridade">
+          <option value="low">Prioridade baixa</option>
+          <option value="medium">Prioridade média</option>
+          <option value="high">Prioridade alta</option>
+        </select>
+        <button id="addTaskBtn">Adicionar</button>
+      </div>
+    </section>
 
-        
+    <nav class="filters" aria-label="Filtrar tarefas">
+      <button class="chip active" data-filter="all">Todas</button>
+      <button class="chip" data-filter="pending">Pendentes</button>
+      <button class="chip" data-filter="done">Concluídas</button>
+      <button class="chip clear" id="clearDone">Limpar concluídas</button>
+    </nav>
 
-        <footer class="sys-footer">
-            <div class="progress-track"><div id="prog-bar"></div></div>
-            <p>SISTEMA: OPERACIONAL | TAREFAS: <span id="count">0</span></p>
-        </footer>
-    </main>
-    <script src="js/script.js"></script>
+    <ul id="taskList"></ul>
+
+    <footer class="sys-footer">
+      <div class="progress-track"><div id="prog-bar"></div></div>
+      <p><span id="count">0</span> pendentes</p>
+    </footer>
+  </main>
+
+  <script src="js/script.js"></script>
 </body>
 </html>

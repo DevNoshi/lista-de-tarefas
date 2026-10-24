@@ -1,404 +1,81 @@
 :root {
-    --bg: #030405;
-    --panel: rgba(10, 15, 30, 0.5);
-    --core: #00bfff;
-    --danger: #ff4757;
-    --glow: 0 0 20px #00f3ff;
+  --bg: #0d0e12; --text: #ebe9e4; --muted: #8a8c96; --line: #22242c;
+  --accent: #9fb0ff; --warm: #ff9b8a;
+  --display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --body: 'Instrument Sans', system-ui, sans-serif;
+  --ease: cubic-bezier(.22, 1, .36, 1);
 }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { color-scheme: dark; }
+body { background: var(--bg); color: var(--text); font: 400 1rem/1.6 var(--body); -webkit-font-smoothing: antialiased; min-height: 100svh; overflow-x: hidden; }
+button, input, select { font: inherit; color: inherit; }
+ul { list-style: none; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+::selection { background: var(--accent); color: var(--bg); }
 
-/* ADICIONE ESTAS TRÊS PROPRIEDADES AO BODY PARA CENTRALIZAR */
-/* Centralização Absoluta */
-body {
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    /* Centraliza horizontal */
-    align-items: center;
-    /* Centraliza vertical */
-    background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-    color: #00c2ff;
-    overflow: hidden;
-    position: relative;
-    /* Isso cria um novo contexto de empilhamento */
-}
-
-.viewport {
-    width: 650px;
-    /* Largura fixa que você queria */
-    max-width: 95vw;
-    /* Garante que não quebre em telas pequenas */
-    background: var(--panel);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-    padding: 30px;
-    /* Espaçamento interno */
-    box-sizing: border-box;
-    /* Crucial para não estourar a largura */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Um pouco mais visível */
-    box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 15px rgba(138, 43, 226, 0.1);
-}
-
-
-/* O Fundo deve ficar lá no fundo mesmo */
-.galaxy-layer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
-    /* Mudei para -1 para garantir que fique atrás de tudo */
-    background:
-        radial-gradient(circle at 15% 20%, #2e1a47 0%, transparent 25%),
-        radial-gradient(circle at 85% 80%, #1a2a47 0%, transparent 25%),
-        radial-gradient(circle at 50% 50%, #090a0f 0%, #030405 100%);
-    background-color: #030405;
-}
-
-
-/* 2. LAYER: HUD/Conteúdo (Centralizado) */
-.hud-container {
-    position: relative;
-    z-index: 1;
-    /* Fica acima do fundo */
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* 3. A SUA VIEWPORT (Conteúdo de tarefas) */
-.task-viewport {
-    width: 650px;
-    max-width: 90vw;
-    background: var(--panel);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-    padding: 30px;
-    box-sizing: border-box;
-    border-radius: 24px;
-}
-
-@keyframes star-drift {
-    from {
-        background-position: 0 0;
-    }
-
-    to {
-        background-position: 10000px 5000px;
-    }
-}
-
-/* [MANTIVE TODO O RESTO DO SEU CÓDIGO AQUI ABAIXO SEM REMOVER NADA] */
-.viewport:hover {
-    box-shadow: 0 0 50px #00bfff;
-}
-
-
-
-/* Ajuste nos inputs para combinar com o fundo */
-
-input,
-select {
-    background: rgba(0, 0, 0, 0.3);
-    border-color: #333;
-}
-
-
+.glow { position: fixed; top: 0; left: 0; width: 34rem; height: 34rem; margin: -17rem 0 0 -17rem; background: radial-gradient(closest-side, rgba(159,176,255,.13), transparent); pointer-events: none; }
+.viewport { position: relative; width: min(100% - 2.5rem, 40rem); margin: 0 auto; padding: clamp(2.5rem, 8vw, 5rem) 0 3rem; animation: rise .9s var(--ease) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(1.25rem); } }
 
 /* Cabeçalho */
+.sys-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 2.5rem; }
+.date { color: var(--accent); font-weight: 500; text-transform: capitalize; margin-bottom: .4rem; }
+h1 { font: 800 clamp(2rem, 7vw, 3.25rem)/1 var(--display); letter-spacing: -.04em; }
+#clock { font: 600 clamp(1.1rem, 3vw, 1.5rem) var(--display); font-variant-numeric: tabular-nums; color: var(--muted); }
 
-.sys-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}
+/* Nova tarefa */
+.cmd-center { display: grid; gap: .75rem; margin-bottom: 2rem; }
+#taskInput { width: 100%; background: none; border: 0; border-bottom: 1px solid var(--line); padding: .9rem 0; font: 600 1.35rem var(--display); letter-spacing: -.02em; transition: border-color .3s; }
+#taskInput::placeholder { color: var(--muted); font-weight: 400; }
+#taskInput:focus { outline: none; border-color: var(--accent); }
+.row { display: flex; flex-wrap: wrap; gap: .6rem; }
+.row input, .row select { background: none; border: 0; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line); padding: .6rem 1rem; font-size: .95rem; color: var(--muted); transition: box-shadow .3s, color .3s; min-width: 0; }
+.row input:hover, .row select:hover, .row input:focus, .row select:focus { box-shadow: inset 0 0 0 1px var(--accent); color: var(--text); outline: none; }
+.row select option { background: #16171c; color: var(--text); }
+#addTaskBtn { margin-left: auto; padding: .6rem 1.5rem; border: 0; border-radius: 999px; background: var(--text); color: var(--bg); font-weight: 500; cursor: pointer; transition: transform .4s var(--ease), background .3s; }
+#addTaskBtn:hover { transform: translateY(-2px); background: var(--accent); }
+.shake { animation: shake .35s; }
+@keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 
-.sys-header h1 {
-    font-size: 1.2rem;
-    color: #00bfff;
-    letter-spacing: 2px;
-}
+/* Filtros */
+.filters { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+.chip { background: none; border: 0; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line); padding: .4rem .95rem; font-size: .9rem; color: var(--muted); cursor: pointer; transition: color .3s, box-shadow .3s, background .3s; }
+.chip:hover { color: var(--text); box-shadow: inset 0 0 0 1px var(--accent); }
+.chip.active { background: var(--accent); color: var(--bg); box-shadow: none; }
+.chip.clear { margin-left: auto; box-shadow: none; }
+.chip.clear:hover { color: var(--warm); box-shadow: none; }
 
-
-
-/* Área de Comando */
-
-.cmd-center {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.row {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    gap: 10px;
-}
-
-
-
-input,
-select {
-
-    background: rgba(255, 255, 255, 0.05);
-
-    border: 1px solid rgba(255, 255, 255, 0.1);
-
-    border-radius: 50px;
-
-    padding: 12px 20px;
-
-    color: #00beff;
-
-    outline: none;
-
-}
-
-
-
-#addTaskBtn {
-
-    background: linear-gradient(90deg, #00f3ff, #00aaff);
-
-    border: none;
-
-    border-radius: 50px;
-
-    font-weight: 700;
-
-    color: #000;
-
-    cursor: pointer;
-
-    transition: 0.3s;
-
-}
-
-
-
-#addTaskBtn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px var(--core);
-}
-
-
-
-/* Lista de Tarefas */
-
-#taskList {
-    list-style: none;
-    padding: 0;
-}
-
-.task-item {
-
-    background: rgba(255, 255, 255, 0.03);
-
-    border-radius: 16px;
-
-    padding: 18px 24px;
-
-    margin-bottom: 12px;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    border-left: 6px solid var(--core);
-
-    transition: 0.4s;
-
-}
-
-.task-item.high {
-    border-left-color: var(--danger);
-}
-
-.task-item.done {
-    opacity: 0.5;
-    text-decoration: line-through;
-}
-
-
-
-/* Toggle de Concluído e Remover */
-
-.toggle-btn {
-    width: 40px;
-    height: 22px;
-    background: #333;
-    border-radius: 50px;
-    cursor: pointer;
-    position: relative;
-}
-
-.toggle-btn.active {
-    background: var(--core);
-}
-
-.btn-del {
-
-    background: transparent;
-    border: 1px solid #444;
-    border-radius: 50%;
-
-    width: 32px;
-    height: 32px;
-    color: var(--danger);
-    cursor: pointer;
-
-}
-
-
+/* Tarefas */
+#taskList { border-top: 1px solid var(--line); }
+.task { display: flex; align-items: center; gap: 1rem; padding: 1.1rem 0; border-bottom: 1px solid var(--line); transition: opacity .25s, transform .25s var(--ease); }
+.task.new { animation: rise .5s var(--ease); }
+.task.out { opacity: 0; transform: translateX(1.5rem); }
+.check { flex: none; width: 1.5rem; height: 1.5rem; border-radius: 50%; border: 0; background: none; box-shadow: inset 0 0 0 1.5px var(--muted); cursor: pointer; position: relative; transition: box-shadow .3s, background .3s; }
+.task.high .check { box-shadow: inset 0 0 0 1.5px var(--warm); }
+.task.medium .check { box-shadow: inset 0 0 0 1.5px var(--accent); }
+.check:hover { background: rgba(159,176,255,.15); }
+.task.done .check { background: var(--accent); box-shadow: none; }
+.task.done .check::after { content: ''; position: absolute; left: 50%; top: 46%; width: .35rem; height: .65rem; border: solid var(--bg); border-width: 0 2px 2px 0; transform: translate(-50%, -50%) rotate(45deg); }
+.body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.title { font: 600 1.15rem var(--display); letter-spacing: -.01em; overflow-wrap: anywhere; transition: color .3s; }
+.meta { color: var(--muted); font-size: .88rem; }
+.meta.late { color: var(--warm); }
+.task.done .title { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+.del { flex: none; width: 2rem; height: 2rem; border: 0; background: none; border-radius: 50%; color: var(--muted); font-size: 1.4rem; line-height: 1; cursor: pointer; opacity: 0; transition: opacity .25s, color .25s; }
+.task:hover .del, .del:focus-visible { opacity: 1; }
+.del:hover { color: var(--warm); }
+.empty { padding: 2.5rem 0; color: var(--muted); text-align: center; border-bottom: 1px solid var(--line); }
 
 /* Rodapé */
+.sys-footer { margin-top: 2rem; color: var(--muted); font-size: .95rem; }
+.progress-track { height: 3px; background: var(--line); border-radius: 3px; overflow: hidden; margin-bottom: .75rem; }
+#prog-bar { height: 100%; width: 0; background: var(--accent); border-radius: 3px; transition: width .6s var(--ease); }
 
-.sys-footer {
-    margin-top: 30px;
+@media (max-width: 520px) {
+  .sys-header { flex-direction: column; align-items: flex-start; }
+  #addTaskBtn { width: 100%; margin: .25rem 0 0; }
+  .row input, .row select { flex: 1 1 100%; }
+  .del { opacity: 1; }
 }
-
-.progress-track {
-    height: 6px;
-    background: #222;
-    border-radius: 50px;
-    overflow: hidden;
-}
-
-#prog-bar {
-    height: 100%;
-    background: var(--core);
-    width: 0%;
-    transition: 0.5s;
-}
-
-
-
-/* --- Novo Switch de Status (Estilo Fluido) --- */
-
-.toggle-btn {
-
-    width: 45px;
-
-    height: 24px;
-
-    background: #2a2a2a;
-
-    border-radius: 50px;
-
-    position: relative;
-
-    cursor: pointer;
-
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-    border: 1px solid rgba(255, 255, 255, 0.1);
-
-}
-
-
-
-.toggle-btn.active {
-
-    background: var(--core);
-
-    box-shadow: 0 0 10px var(--core);
-
-}
-
-
-
-.toggle-btn::before {
-
-    content: "";
-
-    position: absolute;
-
-    top: 2px;
-
-    left: 2px;
-
-    width: 18px;
-
-    height: 18px;
-
-    background: white;
-
-    border-radius: 50%;
-
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-}
-
-
-
-.toggle-btn.active::before {
-
-    left: 23px;
-
-    background: var(--bg);
-
-}
-
-
-
-/* --- Botão Remover (Design minimalista e circular) --- */
-
-.btn-del {
-
-    width: 32px;
-
-    height: 32px;
-
-    border-radius: 50%;
-
-    border: 1px solid #444;
-
-    background: rgba(255, 71, 87, 0.05);
-
-    color: #ff4757;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    cursor: pointer;
-
-    transition: all 0.3s ease;
-
-    font-weight: bold;
-
-}
-
-
-
-.btn-del:hover {
-
-    background: #ff4757;
-
-    color: white;
-
-    transform: rotate(90deg) scale(1.1);
-
-}
-
-/* Fundo da Galáxia */
-/* Fundo independente e fixo */
-.galaxy-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
-    animation: star-drift 60s linear infinite;
-}
+@media (hover: none) { .glow { display: none; } .del { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
