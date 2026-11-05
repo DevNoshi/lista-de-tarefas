@@ -71,6 +71,11 @@ h1 { font: 800 clamp(2rem, 7vw, 3.25rem)/1 var(--display); letter-spacing: -.04e
 .progress-track { height: 3px; background: var(--line); border-radius: 3px; overflow: hidden; margin-bottom: .75rem; }
 #prog-bar { height: 100%; width: 0; background: var(--accent); border-radius: 3px; transition: width .6s var(--ease); }
 
+.foot-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.chip.notify { font-size: .85rem; }
+.chip.notify:disabled { opacity: .5; cursor: not-allowed; }
+.hint { margin-top: .75rem; font-size: .88rem; }
+
 @media (max-width: 520px) {
   .sys-header { flex-direction: column; align-items: flex-start; }
   #addTaskBtn { width: 100%; margin: .25rem 0 0; }

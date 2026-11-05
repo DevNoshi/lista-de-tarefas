@@ -1,3 +1,5 @@
+import * as reminders from './push.js';
+
 (() => {
   const $ = id => document.getElementById(id);
   const input = $('taskInput'), dateEl = $('taskDate'), prioEl = $('taskPriority');
@@ -12,6 +14,7 @@
   }
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(tasks)); } catch {}
+    reminders.sync(tasks); // mantém o servidor com os lembretes atualizados
   }
 
   // Relógio e data
@@ -107,6 +110,48 @@
     render();
   });
   $('clearDone').addEventListener('click', () => { tasks = tasks.filter(t => !t.done); save(); render(); });
+
+  // Lembretes (notificações push)
+  const notifyBtn = $('notifyBtn'), notifyHint = $('notifyHint');
+  const HINTS = {
+    unsupported: 'Este navegador não suporta notificações push.',
+    'ios-install': 'No iPhone/iPad, toque em Compartilhar › "Adicionar à Tela de Início" e abra o app por lá para ativar os lembretes.',
+    denied: 'As notificações estão bloqueadas. Libere nas configurações do site no navegador para ativar.',
+    off: 'Receba um aviso no horário de cada tarefa, mesmo com o navegador fechado.',
+    on: '',
+  };
+
+  async function renderNotify(error) {
+    const state = await reminders.getState();
+    notifyBtn.hidden = state === 'unsupported' || state === 'ios-install';
+    notifyBtn.disabled = state === 'denied';
+    notifyBtn.classList.toggle('active', state === 'on');
+    notifyBtn.textContent = state === 'on' ? 'Lembretes ativos' : 'Ativar lembretes';
+    notifyHint.textContent = error || HINTS[state];
+    notifyHint.hidden = !notifyHint.textContent;
+  }
+
+  notifyBtn.addEventListener('click', async () => {
+    notifyBtn.disabled = true;
+    let error = '';
+    try {
+      if ((await reminders.getState()) === 'on') {
+        await reminders.disable();
+      } else if (await reminders.enable()) {
+        const synced = await reminders.sync(tasks, true);
+        const tested = synced && await reminders.sendTest();
+        if (!tested) error = 'Não consegui registrar este dispositivo no servidor. Tente de novo em instantes.';
+      }
+    } catch (err) {
+      console.error(err);
+      error = 'Não foi possível ativar os lembretes agora. Verifique a conexão e tente de novo.';
+    }
+    await renderNotify(error);
+  });
+
+  reminders.registerServiceWorker();
+  renderNotify();
+  reminders.sync(tasks); // reenvia ao abrir: se o servidor perdeu dados, ele se recupera
 
   // Luz que segue o cursor (só com mouse)
   const glow = document.querySelector('.glow');

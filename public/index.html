@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lista de Tarefas</title>
   <meta name="theme-color" content="#0d0e12">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/imgs/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
@@ -46,10 +50,14 @@
 
     <footer class="sys-footer">
       <div class="progress-track"><div id="prog-bar"></div></div>
-      <p><span id="count">0</span> pendentes</p>
+      <div class="foot-row">
+        <p><span id="count">0</span> pendentes</p>
+        <button class="chip notify" id="notifyBtn" hidden>Ativar lembretes</button>
+      </div>
+      <p class="hint" id="notifyHint" hidden></p>
     </footer>
   </main>
 
-  <script src="js/script.js"></script>
+  <script type="module" src="js/script.js"></script>
 </body>
 </html>

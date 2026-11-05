@@ -1,57 +1,71 @@
-sistema de gerenciamento de tarefas de alta performance, desenhado com uma estética Cyber-Industrial voltada para desenvolvedores e entusiastas de interfaces futuristas. Projetado para rodar localmente com persistência de dados, o sistema oferece um controle centralizado, visual minimalista (Glassmorphism) e feedback de progresso em tempo real.
+# Lista de Tarefas
 
-🚀 Visão Geral
-O objetivo deste projeto é elevar a produtividade através de uma interface de Dashboard de Monitoramento. O foco não é apenas listar tarefas, mas proporcionar uma experiência de "controle de sistema" onde o usuário gerencia suas missões com precisão técnica.
+Gerenciador de tarefas com estética minimalista dark, prioridades, progresso em tempo real e **lembretes que chegam mesmo com o navegador fechado** (PWA + Web Push).
 
-🛠 Tecnologias Utilizadas
-Front-end: HTML5, CSS3 (com foco em backdrop-filter e cubic-bezier para transições fluidas).
+## Como os lembretes funcionam
 
-Lógica: JavaScript ES6+ com manipulação de DOM reativa.
+Um site não consegue rodar código com a aba fechada, então o aviso vem de fora:
 
-Persistência: localStorage (Armazenamento local para que seus dados sobrevivam ao fechar o navegador).
+1. O navegador cria uma *assinatura push* e o front a envia ao servidor junto com as tarefas que têm data futura.
+2. O servidor (Node) confere a cada 20 s quais lembretes venceram e dispara um Web Push (VAPID) pelo serviço do próprio navegador (Google, Mozilla, Microsoft ou Apple).
+3. O **service worker** (`public/sw.js`) recebe o push e mostra a notificação, mesmo sem nenhuma aba aberta.
 
-Design: Estética Hyper-Minimalist Cyber (inspirada em interfaces de sistemas operacionais de 2026).
+As tarefas continuam no `localStorage`; o servidor guarda só uma cópia dos **lembretes pendentes** (texto, prioridade e horário) para poder avisar. Ao abrir o app, o front reenvia tudo, então o servidor se recupera sozinho se perder os dados.
 
-📋 Funcionalidades Principais
-Painel Centralizado: Interface focada em produtividade, removendo distrações.
+## Tecnologias
 
-Gestão de Prioridades: Categorização visual por cores (Low, Medium, High).
+- Front-end: HTML5, CSS3, JavaScript ES modules, Service Worker, Web App Manifest
+- Back-end: Node.js 20+, Express, [`web-push`](https://github.com/web-push-libs/web-push)
+- Persistência: `localStorage` (tarefas) e arquivo JSON no servidor (lembretes)
 
-Métrica em Tempo Real: Barra de progresso integrada que responde instantaneamente às mudanças de estado.
+## Estrutura
 
-Feedback de Sistema: Relógio local integrado e status de sincronização (Online).
+```
+├── server.js              # API, agendador e envio de push
+├── package.json
+├── .env.example
+└── public/
+    ├── index.html
+    ├── manifest.webmanifest
+    ├── sw.js              # push, clique na notificação e cache offline
+    ├── css/style.css
+    ├── js/
+    │   ├── script.js      # tarefas e interface
+    │   └── push.js        # permissão, assinatura e sincronização
+    └── imgs/
+```
 
-Interatividade: Botões de ação fluidos com feedback de estado (Toggle/Delete).
+## Como rodar
 
-📂 Estrutura do Projeto
-Plaintext
-/
-├── css/
-│   └── style.css       # Engine visual (Glassmorphism & Animações)
-├── js/
-│   └── script.js       # Core Logic (Renderização e Estado)
-└── index.html          # Shell da Aplicação
-💻 Como Rodar
-Clone este repositório para sua máquina.
+```bash
+npm install
+npm start          # http://localhost:3000
+```
 
-Certifique-se de que os arquivos estão organizados na estrutura de pastas acima.
+Em desenvolvimento as chaves VAPID são geradas sozinhas em `data/vapid.json`. Abra `http://localhost:3000` (service workers só funcionam em `localhost` ou HTTPS), clique em **Ativar lembretes**, aceite a permissão e crie uma tarefa com horário daqui a 1–2 minutos.
 
-Abra o arquivo index.html em qualquer navegador moderno.
+## Publicar
 
-O sistema irá carregar automaticamente o motor de tarefas.
+É preciso **HTTPS** e um processo Node **sempre ligado** (o agendador mora nele).
 
-🔧 Manutenção e Evolução
-Este é um sistema modular. Possíveis melhorias futuras incluem:
+1. `npm run keys` e copie as chaves para as variáveis de ambiente (`.env.example` lista todas).
+2. Configure `VAPID_SUBJECT` com um e-mail real e `TRUST_PROXY=1` se estiver atrás de proxy.
+3. Aponte `DATA_DIR` para um disco persistente.
+4. Planos gratuitos que "dormem" por inatividade (comum no Render e similares) atrasam ou perdem lembretes; use um plano sempre ativo ou uma VPS pequena.
 
-[PENDENTE] Implementação do Nexus Droid Oracle: Assistente de sistema para sugestões automáticas e automação de tarefas.
+> Trocar as chaves VAPID invalida as assinaturas antigas: cada usuário precisa clicar em *Ativar lembretes* de novo.
 
-[PENDENTE] Exportação de dados para JSON/CSV.
+## Limitações
 
-[PENDENTE] Modo "Deep Space" (paleta de cores alternativa para ambientes de baixíssima luz).
+- **Android (Chrome/Firefox/Edge)**: funciona com o navegador fechado.
+- **Windows/Linux (Chrome, Edge, Firefox)**: funciona com a janela fechada enquanto o navegador seguir em segundo plano. Se ele for encerrado por completo, o aviso só chega quando for aberto de novo.
+- **macOS (Chrome)**: o navegador precisa estar aberto, mesmo sem janelas.
+- **iPhone/iPad (iOS 16.4+)**: só funciona depois de *Compartilhar › Adicionar à Tela de Início* e abrindo o app por esse ícone.
+- Os lembretes são por dispositivo: não há contas nem sincronização entre aparelhos.
 
-👤 Desenvolvedor
-Projeto mantido sob a filosofia de design interativo e funcional.
+## Evolução
 
-Status do Sistema: Operacional.
-
-Este README serve como guia de construção e possíveis futuras melhorias.
+- [ ] Avisar com antecedência (ex.: 15 min antes)
+- [ ] Ações na notificação (Concluir / Adiar)
+- [ ] Exportação de dados para JSON/CSV
+- [ ] Modo "Deep Space" (paleta alternativa)
